@@ -1,5 +1,6 @@
 ---
-import '../styles/global.css';
+import Navigation from "../components/Navbar.astro";
+import "../styles/global.css";
 
 const pageTitle = "About Me";
 
@@ -25,7 +26,7 @@ const skillFontWeight = "bold";
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width" />
     <title>{pageTitle}</title>
-    <style define:vars={{skillColor, skillFontWeight}}>
+    <style define:vars={{ skillColor, skillFontWeight }}>
       h1 {
         color: purple;
         font-size: 4rem;
@@ -37,9 +38,8 @@ const skillFontWeight = "bold";
     </style>
   </head>
   <body>
-    <a href="/">Home</a>
-    <a href="/about/">About</a>
-    <a href="/blog/">Blog</a>
+    <Navigation />
+    
     <h1>{pageTitle}</h1>
     <h2>... and my new Astro site!</h2>
 
