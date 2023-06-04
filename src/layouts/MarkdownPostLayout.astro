@@ -1,23 +1,44 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-const { frontmatter } = Astro.props;
+const { frontmatter, headings } = Astro.props;
 ---
 
-<BaseLayout pageTitle={frontmatter.title}>
-  <p>Written by {frontmatter.author}</p>
+<BaseLayout pageTitle={frontmatter.data.title}>
+  <p>Written by {frontmatter.data.author}</p>
   <div class="tags">
     {
-      frontmatter.tags.map((tag) => (
+      frontmatter.data.tags.map((tag) => (
         <p class="tag">
           <a href={`/tags/${tag}`}>{tag}</a>
         </p>
       ))
     }
   </div>
-  <slot />
+  <div id="test"><slot /></div>
+  <aside id="toctest">
+    *TOC TESTING*<ul>
+      <li>
+        <a href={`/posts/${frontmatter.slug}/#` + headings[0].slug}
+          >{headings[0].text}</a>
+      </li>
+    </ul>
+  </aside>
 </BaseLayout>
 
 <style>
+  #toctest {
+    position: fixed;
+    right: 0;
+    padding: 10px;
+    top: 0;
+    margin-top: 200px;
+  }
+  #test {
+    margin-left: auto;
+    margin-right: auto;
+    max-width: 42rem;
+    font-size: 20px;
+  }
   a {
     color: #00539f;
   }
