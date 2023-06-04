@@ -1,6 +1,29 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
 const { frontmatter, headings } = Astro.props;
+
+type HeadingNested = {
+  text: string;
+  slug: string;
+  children: HeadingNested[];
+};
+
+let headings_nested: HeadingNested[] = [];
+let lastItem;
+let newItem: HeadingNested | undefined;
+
+headings.forEach(({ depth, slug, text }) => {
+  if (depth === 2) {
+    newItem = { text, slug, children: [] };
+    headings_nested.push(newItem);
+  } else if (depth === 3 && lastItem) {
+    lastItem.children.push({ text, slug });
+  }
+
+  if (newItem) {
+    lastItem = newItem;
+  }
+});
 ---
 
 <BaseLayout pageTitle={frontmatter.data.title}>
@@ -16,11 +39,34 @@ const { frontmatter, headings } = Astro.props;
   </div>
   <div id="test"><slot /></div>
   <aside id="toctest">
-    *TOC TESTING*<ul>
-      <li>
-        <a href={`/posts/${frontmatter.slug}/#` + headings[0].slug}
-          >{headings[0].text}</a>
-      </li>
+    *TOC TESTING*
+    <ul>
+      {
+        headings_nested.map((heading) =>
+          heading.children.length > 0 ? (
+            <li>
+              <a href={`/posts/${frontmatter.slug}/#` + heading.slug}>
+                {heading.text}
+              </a>
+              <ul>
+                {heading.children.map((child) => (
+                  <li>
+                    <a href={`/posts/${frontmatter.slug}/#` + child.slug}>
+                      {child.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ) : (
+            <li>
+              <a href={`/posts/${frontmatter.slug}/#` + heading.slug}>
+                {heading.text}
+              </a>
+            </li>
+          )
+        )
+      }
     </ul>
   </aside>
 </BaseLayout>
@@ -31,14 +77,18 @@ const { frontmatter, headings } = Astro.props;
     right: 0;
     padding: 10px;
     top: 0;
-    margin-top: 200px;
+    margin-top: 250px;
+    margin-right: 20px;
   }
   #test {
     margin-left: auto;
     margin-right: auto;
     max-width: 42rem;
     font-size: 20px;
+    padding-left: 10px;
+    padding-right: 10px;
   }
+
   a {
     color: #00539f;
   }
