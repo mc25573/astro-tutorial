@@ -1,6 +1,6 @@
 ---
 import BaseLayout from "./BaseLayout.astro";
-const { frontmatter, headings } = Astro.props;
+const { content, headings } = Astro.props;
 
 type HeadingNested = {
   text: string;
@@ -26,67 +26,71 @@ headings.forEach(({ depth, slug, text }) => {
 });
 ---
 
-<BaseLayout pageTitle={frontmatter.data.title}>
-  <p>Written by {frontmatter.data.author}</p>
+<BaseLayout pageTitle={content.data.title}>
+  <p>Written by {content.data.author}</p>
   <div class="tags">
     {
-      frontmatter.data.tags.map((tag) => (
+      content.data.tags.map((tag) => (
         <p class="tag">
           <a href={`/tags/${tag}`}>{tag}</a>
         </p>
       ))
     }
   </div>
-  <div id="test"><slot /></div>
-  <aside id="toctest">
-    *TOC TESTING*
-    <ul>
-      {
-        headings_nested.map((heading) =>
-          heading.children.length > 0 ? (
-            <li>
-              <a href={`/posts/${frontmatter.slug}/#` + heading.slug}>
-                {heading.text}
-              </a>
-              <ul>
-                {heading.children.map((child) => (
-                  <li class="depth2">
-                    <a href={`/posts/${frontmatter.slug}/#` + child.slug}>
-                      {child.text}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </li>
-          ) : (
-            <li>
-              <a href={`/posts/${frontmatter.slug}/#` + heading.slug}>
-                {heading.text}
-              </a>
-            </li>
+
+  
+    <div id="test"><slot /></div>
+    <aside id="toctest">
+      <h2>On this page</h2>
+      <ul>
+        {
+          headings_nested.map((heading) =>
+            heading.children.length > 0 ? (
+              <li>
+                <a href={`/posts/${content.slug}/#` + heading.slug}>
+                  {heading.text}
+                </a>
+                <ul>
+                  {heading.children.map((child) => (
+                    <li class="depth2">
+                      <a href={`/posts/${content.slug}/#` + child.slug}>
+                        {child.text}
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </li>
+            ) : (
+              <li>
+                <a href={`/posts/${content.slug}/#` + heading.slug}>
+                  {heading.text}
+                </a>
+              </li>
+            )
           )
-        )
-      }
-    </ul>
-  </aside>
+        }
+      </ul>
+    </aside>
+
 </BaseLayout>
 
 <style>
+  .container {
+    display: flex;
+    justify-content: space-between;
+    width: 80%; /* adjust as needed */
+    margin: 0 auto;
+  }
   #toctest {
     position: fixed;
-    right: 0;
-    padding: 10px;
-    top: 0;
-    margin-top: 250px;
-    margin-right: 30px;
+    left: 75%;
+    top: 20%;
   }
   #test {
-    margin-left: auto;
-    margin-right: auto;
     max-width: 42rem;
     font-size: 20px;
-    padding-left: 10px;
-    padding-right: 10px;
+    line-height: 25px;
+    margin: 0 auto;
   }
   ul {
     list-style-type: none; /* Remove bullets */

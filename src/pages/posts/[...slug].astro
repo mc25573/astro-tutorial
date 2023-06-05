@@ -12,9 +12,9 @@ export async function getStaticPaths() {
 
 const { entry } = Astro.props;
 const { Content, headings } = await entry.render();
-//console.log(headings);
+
 ---
 
-<MarkdownPostLayout frontmatter={entry} headings={headings}>
+<MarkdownPostLayout content={entry} headings={headings}>
   <Content />
 </MarkdownPostLayout>

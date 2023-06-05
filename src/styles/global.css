@@ -17,3 +17,16 @@ html.dark {
   align-items: center;
   justify-content: center;
 }
+
+:root {
+  --theme-bg: hsl(256, 27%, 19%);
+  --theme-bg-gradient-top: var(--theme-bg);
+  --theme-bg-gradient-bottom: hsl(251, 29%, 11%);
+  --theme-bg-gradient: linear-gradient(
+    180deg,
+    var(--theme-bg-gradient-top),
+    var(--theme-bg-gradient-top)
+      calc(6rem + 4rem),
+    var(--theme-bg-gradient-bottom)
+  );
+}
