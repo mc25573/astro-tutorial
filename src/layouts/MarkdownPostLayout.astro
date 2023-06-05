@@ -24,6 +24,21 @@ headings.forEach(({ depth, slug, text }) => {
     lastItem = newItem;
   }
 });
+
+function removeMarkdownAndHTML(input) {
+  // Remove HTML tags
+  let noHTML = input.replace(/<\/?[^>]+(>|$)/g, "");
+  return noHTML.replace(/[\r\n]/g, "");
+}
+
+function calculateReadTimeInMinutes(text) {
+  var words = text.split(' ');
+  var wordsPerMinute = 250;
+  var readTime = words.length / wordsPerMinute;
+  return readTime.toFixed(1);
+}
+
+console.log(calculateReadTimeInMinutes(removeMarkdownAndHTML(content.body)));
 ---
 
 <BaseLayout pageTitle={content.data.title}>
@@ -38,40 +53,38 @@ headings.forEach(({ depth, slug, text }) => {
     }
   </div>
 
-  
-    <div id="test"><slot /></div>
-    <aside id="toctest">
-      <h2>On this page</h2>
-      <ul>
-        {
-          headings_nested.map((heading) =>
-            heading.children.length > 0 ? (
-              <li>
-                <a href={`/posts/${content.slug}/#` + heading.slug}>
-                  {heading.text}
-                </a>
-                <ul>
-                  {heading.children.map((child) => (
-                    <li class="depth2">
-                      <a href={`/posts/${content.slug}/#` + child.slug}>
-                        {child.text}
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </li>
-            ) : (
-              <li>
-                <a href={`/posts/${content.slug}/#` + heading.slug}>
-                  {heading.text}
-                </a>
-              </li>
-            )
+  <div id="test"><slot /></div>
+  <aside id="toctest">
+    <h2>On this page</h2>
+    <ul>
+      {
+        headings_nested.map((heading) =>
+          heading.children.length > 0 ? (
+            <li>
+              <a href={`/posts/${content.slug}/#` + heading.slug}>
+                {heading.text}
+              </a>
+              <ul>
+                {heading.children.map((child) => (
+                  <li class="depth2">
+                    <a href={`/posts/${content.slug}/#` + child.slug}>
+                      {child.text}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </li>
+          ) : (
+            <li>
+              <a href={`/posts/${content.slug}/#` + heading.slug}>
+                {heading.text}
+              </a>
+            </li>
           )
-        }
-      </ul>
-    </aside>
-
+        )
+      }
+    </ul>
+  </aside>
 </BaseLayout>
 
 <style>
